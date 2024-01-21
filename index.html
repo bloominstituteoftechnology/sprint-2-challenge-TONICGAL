@@ -66,29 +66,76 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
   <script id="challenge">
     // In CHALLENGES 1-6 you will write JavaScript functions
-
     // ❗ Functions are scaffolded for you, but are missing their parameters and bodies
     // ❗ Do not rename the functions provided, and do not create any other script tags
     // ❗ Do not modify the location of the two script tags in this document
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1
-    function profileActivation() {
-      // 🧠 profileActivation takes two arguments, profile and reason, which are an object and a string respectively
-      //  The reason arg is only used -and therefore required- to deactivate profiles, not to activate them
+    function profileActivation(profileObj,reasonStr){
+    if (profileObj.active !== undefined) {  
+            if (profileObj.active){      
+            if(profileObj.reason !== undefined){
+            return "confirm status manually";
+          }
+           profileObj.active = false;
+           profileObj.reason = reasonStr;
+         } else {
+          if(profileObj.reason === undefined){
+           return "confirm status manually";
+          }
+          profileObj.active = true;
+          delete profileObj.reason;
+            }
+          return profileObj 
+       } else {
+          return "impossible to ascertain status";
+       }
+      }
+  
+
+  console.log(profileActivation({"active": true, "reason": ""}));
+  console.log(profileActivation({"active": true, "reason": "because"}));
+  console.log(profileActivation({"active": false, "reason": "because"}));
+          
+        
       //  The profile arg has an `active` property holding a Boolean value
       //    * If profile is active, profileActivation deactivates it and writes a `reason` prop holding the reason
       //    * If profile is inactive, profileActivation activates it and deletes the `reason` prop from the object
       //    * In both cases the updated profile object is returned
+
+
+
+      //  The reason arg is only used -and therefore required- to deactivate profiles, not to activate them
+
+
       // 🧠 Edge cases:
       //    * If the profile is inactive but its `reason` prop is **missing**, return the string "confirm status manually"
       //    * If the profile is active but it has a `reason` prop, return the string "confirm status manually"
       //    * If the profile is **missing** an `active` prop, return the string "impossible to ascertain status"
       // 🌟 HINT: to confirm the existence of a prop, check that its value is not undefined
-    }
 
+    
     // 👉 CHALLENGE 2
-    function mineSweeper() {
+    function mineSweeper(grid,x,y) {
+      if(x<1 || x>3 || y<1 || y>3){
+        return "invalid coordinates";
+      }
+      const squareValue = grid[y-1][x-1];
+      
+      if ( squareValue ==="🟥" ){
+        return "🟥 💀";
+      } else {
+        return "🟦 🥳"
+      }
+    }
+    const grid = [
+          ["🟥", "🟦", "🟥"],
+          ["🟦", "🟥", "🟥"],
+          ["🟥", "🟦", "🟦"] 
+    ];
+
+      
       // 🧠 mineSweeper takes a grid as its first argument, and coordinates x and y as the second and third args
       //  The grid is an array of arrays in the following format: [["🟥","🟦","🟥"],["🟦","🟥","🟥"],["🟥","🟦","🟦"]]
       //  Each subarray is a row of the grid, the first subarray being the top row:
@@ -107,10 +154,27 @@
       //    * If the player lands on blue, return the string "🟦 🥳"
       // 🧠 Edge cases:
       //    * If the x or y coordinates are under 1 or over 3, return the string "invalid coordinates"
-    }
+    
 
     // 👉 CHALLENGE 3
-    function booleanize() {
+    function booleanize(obj) {
+      for (let prop in obj){
+        if (prop.length >9){
+          return "shorten all prop names to 9 chars or less"
+        }
+      let value = obj[prop];
+      if (value === 0){
+        obj[prop] = false;
+      }
+      if (value === 1){
+        obj[prop] =true
+      } else if ( value === null){
+      delete obj[prop];
+      }
+    }
+    return obj;
+  }
+
       // 🧠 booleanize takes an object as its single argument, which can have any number of properties
       // Loop over the properties and then return the object, after applying the following transformations:
       //    * If a value is the number zero, it must be transformed into the Boolean false
@@ -119,47 +183,102 @@
       // 🧠 Edge cases:
       //    * If a property name exceeds 9 characters, return the string "shorten all prop names to 9 chars or less"
       // 🌟 HINT: careful not to perform any unintended changes on the object
-    }
-
+    
     // 👉 CHALLENGE 4
-    function scrub() {
-      // 🧠 scrub takes a string "text" as its first argument, and an array of forbidden words "forbidden" as its second
+    function scrub(text,forbidden) {
+      if (text.length === 0 || forbidden.length === 0){
+        return text;
+      }
+      const words = text.split(' ');
+      for (let m=0; m< words.length; m++){
+        if (forbidden.indexOf(words[m]) !== -1){
+          words[m]='x'.repeat(words[m].length);
+        }
+      }
+      const final = words.join(' ');
+      return final;
+
+    }      // 🧠 scrub takes a string "text" as its first argument, and an array of forbidden words "forbidden" as its second
       // Any word in the text included in the array of forbidden words is replaced with a word of equal length but made of lowcase "x"
       // The scrubbed text is then returned from the function, as seen in the examples below
       // No punctuation is used in the text
       // 🧠 Examples of usage:
-      //    scrub("out of the silent planet", ["of", "silent"]) // returns "out xx the xxxxxx planet"
-      //    scrub("the ghost of the navigator", ["the"]) // returns "xxx ghost of xxx navigator"
-      //    scrub("lost somewhere in time", []) // returns "lost somewhere in time"
-      //    scrub("aces high", ["high", "aces", "hearts"]) // returns "xxxx xxxx"
-      //    scrub("", ["high", "aces""]) // returns ""
+      console.log(scrub("out of the silent planet", ["of", "silent"])) // returns "out xx the xxxxxx planet"
+      console.log(scrub("the ghost of the navigator", ["the"])) // returns "xxx ghost of xxx navigator"
+      console.log(scrub("lost somewhere in time", [])) // returns "lost somewhere in time"
+      console.log(scrub("aces high", ["high", "aces", "hearts"])) // returns "xxxx xxxx"
+      console.log(scrub("", ["high", "aces"]));
+
+      // returns ""
       // 🌟 HINT: useful array methods to use are `push`, `indexOf`, `split`, `join`
-    }
+    
 
     // 👉 CHALLENGE 5
-    function normalizePhoneNumber() {
+     function normalizePhoneNumber(nstring) {
+       if (nstring.length !==10){
+        return "type a 10-digit number";
+       }
+       for (let d=0; d < nstring.length; d++){
+            if (!/^\d$/.test(nstring[d])){
+          return "invalid phone number";
+        }
+      }
+      
+        let templateArray = "(xxx) xxx-xxxx".split('');
+        let numberIndex=0
+        for (let r=0; r< templateArray.length; r++){
+          if (templateArray[r] === 'x'){
+            templateArray[r] = nstring[numberIndex];
+            numberIndex++;
+          }       
+        }
+        const formattedNumber = templateArray.join("");
+        return formattedNumber;
+      }
+
       // 🧠 normalizePhoneNumber takes a string as its only argument, representing a ten-digit number
       // The function returns a string formatted as seen below
       // 🧠 Examples of usage:
-      // normalizePhoneNumber("9876543210") // returns "(987) 654-3210"
-      // normalizePhoneNumber("1111111111") // returns "(111) 111-1111"
+       console.log(normalizePhoneNumber("9876543210"));
+       console.log(normalizePhoneNumber("1111111111"));
       // 🧠 Edge cases:
       //   * If the argument is of an incorrect length, return the string "type a 10-digit number"
       //   * If the argument is of the correct length but any character is not an integer between 0 and 9, return "invalid phone number"
       // 🌟 HINT: instead of looping over the number's digits, loop backwards over a template "(XXX) XXX-XXXX"
       // 🌟 HINT: at each iteration, if the current character is an "X", replace it with the result of popping a digit from the number
       // 🌟 HINT: if you'd rather loop forwards, use `shift` instead of `pop`
-    }
+    
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
-    function diceRolls() {
-      // 🧠 diceRolls takes no arguments and returns a number
+    function diceRolls(){
+      let throws=0;
+      let consecutiveSixes=0;
+
+      while(true){
+
+        const roll= Math.floor(Math.random()*6)+1;
+        throws ++;
+
+        if (roll ===6){
+          consecutiveSixes ++;
+          if ( consecutiveSixes ===3){
+            break;
+          }
+        }else{
+          consecutiveSixes = 0;
+        }
+      }
+      return throws;
+    }
+    const result = diceRolls();
+    console.log (`It took ${result} throws to get three consecutive sixes.`);
+
       // The function throws a six-sided dice until 3 sixes in a row are obtained
       // The number of throws it took to obtain that third-in-a-row six is then returned from the function
       // 🌟 HINT: research using `Math.random` to obtain a number from 1 to 6
       // 🌟 HINT: use `while(true)` to throw the dice indefinitely, but avoid an infinite loop by making sure to break out eventually
       // 🌟 HINT: you need to keep track of the total number of throws, as well as how many sixes in a row
-    }
+    
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
